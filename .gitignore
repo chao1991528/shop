@@ -7,6 +7,8 @@
 /.vagrant
 /public/js
 /public/css
+/public/fonts
+/public/mix-manifest.json
 Homestead.json
 Homestead.yaml
 npm-debug.log
