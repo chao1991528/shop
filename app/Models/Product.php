@@ -13,4 +13,10 @@ class Product extends Model
     protected $casts = [
     	'on_sale' => 'boolean'
     ];
+    //与商品sku关联
+    public function skus()
+    {
+    	return $this->hasMany(ProductSku::class);
+    }
+
 }
