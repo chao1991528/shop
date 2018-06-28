@@ -19,4 +19,10 @@ class Product extends Model
     	return $this->hasMany(ProductSku::class);
     }
 
+    //商品图片路由
+    public function getImageUrlAttribute()
+    {
+        return '/upload/'.$this->attributes['image'];
+    }
+
 }
