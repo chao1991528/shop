@@ -52,65 +52,65 @@ body {
     }
 }
 
-.products-index-pag,.products-favorites-page {
-    .search-form {
-        padding: 0 20px;
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
-    }
-    .pagination {
-        margin-right: 5px;
-    }
-    .products-list {
-        padding: 0 15px;
-        .product-item {
-            padding: 0 5px;
-            margin-bottom: 10px;
-            .product-content {
-                border: 1px solid #eee;
-                .top {
-                    padding: 5px;
-                    img {
-                        width: 100%;
-                    }
-                    .price {
-                        margin-top: 5px;
-                        font-size: 20px;
-                        color: #ff0036;
-                        b {
-                            font-size: 14px;
-                        }
-                    }
-                    .title {
-                        margin-top: 10px;
-                        font-size: 12px;
-                    }
-                }
-                .bottom {
-                    font-size: 12px;
-                    display: flex;
-                    .sold_count span {
-                        color: #b57c5b;
-                        font-weight: bold;
-                    }
-                    .review_count span {
-                        color: #38b;
-                        font-weight: bold;
-                    }
-                    &>div {
-                        &:first-child {
-                            border-right: 1px solid #eee;
-                        }
-                        padding: 10px 5px;
-                        line-height: 12px;
-                        flex-grow: 1;
-                        border-top: 1px solid #eee;
-                    }
-                }
+.products-index-page, .products-favorites-page {
+  .pagination {
+    margin-right: 5px;
+  }
+  .products-list {
+    padding: 0 15px;
+    .product-item {
+      padding: 0 5px;
+      margin-bottom: 10px;
+      .product-content {
+        border: 1px solid #eee;
+        .top {
+          padding: 5px;
+          img {
+            width: 100%;
+          }
+          .price {
+            margin-top: 5px;
+            font-size: 20px;
+            color: #ff0036;
+            b {
+              font-size: 14px;
             }
+          }
+          .title {
+            margin-top: 10px;
+            font-size: 12px;
+          }
         }
+        .bottom {
+          font-size: 12px;
+          display: flex;
+          .sold_count span {
+            color: #b57c5b;
+            font-weight: bold;
+          }
+          .review_count span {
+            color: #38b;
+            font-weight: bold;
+          }
+          &>div {
+            &:first-child {
+              border-right: 1px solid #eee;
+            }
+            padding: 10px 5px;
+            line-height: 12px;
+            flex-grow: 1;
+            border-top: 1px solid #eee;
+          }
+        }
+      }
     }
+  }
+  .search-form {
+    padding: 0 20px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
 }
 .products-show-page {
     .cover {
@@ -225,6 +225,52 @@ body {
         .tab-content {
             border: 1px solid #eee;
             padding: 20px;
+        }
+    }
+}
+
+.cart-index-page {
+    .product_list {
+        .preview {
+            img {
+                max-width: 80px;
+                max-height: 80px;
+            }
+            margin-right: 20px;
+        }
+
+        .product_info {
+            display: flex;
+            flex-drection: row;
+            align-items: flex-start;
+            font-size: 12px;
+            .product_title, .sku_title, .warning {
+                display: block;
+            }
+
+            .product_title a {
+                color: #3c3c3c;
+                font-size: 14px;
+            }
+            .not_on_sale {
+                .product_title, .sku_title {
+                    text-decoration: line-through;
+                }
+                .warning {
+                    color: red;
+                }
+            }
+        }
+
+        .price {
+            font-size: 12px;
+            font-weight: 700;
+            color: #3c3c3c;
+        }
+
+        input.amount {
+            width: 60px;
+            border-radius: 0 !important;
         }
     }
 }

@@ -6,7 +6,6 @@
 <div class="col-lg-10 col-lg-offset-1">
 <div class="panel panel-default">
   <div class="panel-body">
-    <!-- 筛选组件开始 -->
     <div class="row">
       <form action="{{ route('products.index') }}" class="form-inline search-form">
         <input type="text" class="form-control input-sm" name="search" placeholder="搜索">
@@ -22,7 +21,6 @@
         </select>
       </form>
     </div>
-    <!-- 筛选组件结束 -->
     <div class="row products-list">
       @foreach($products as $product)
       <div class="col-xs-3 product-item">
@@ -30,10 +28,11 @@
           <div class="top">
             <div class="img">
               <a href="{{ route('products.show', ['product' => $product->id]) }}">
-              <img src="{{ $product->image }}" alt="">
+                <img src="{{ $product->image }}" alt="">
+              </a>
             </div>
             <div class="price"><b>￥</b>{{ $product->price }}</div>
-            <div class="title">{{ $product->title }}</div>
+            <a href="{{ route('products.show', ['product' => $product->id]) }}">{{ $product->title }}</a>
           </div>
           <div class="bottom">
             <div class="sold_count">销量 <span>{{ $product->sold_count }}笔</span></div>
@@ -43,18 +42,22 @@
       </div>
       @endforeach
     </div>
-    <div class="pull-right">{{ $products->render() }}</div>  <!-- 只需要添加这一行 -->
+    <div class="pull-right">{{ $products->appends($filters)->render() }}</div>
   </div>
 </div>
 </div>
 </div>
 @endsection
+
 @section('scriptsAfterJs')
   <script>
     var filters = {!! json_encode($filters) !!};
     $(document).ready(function () {
       $('.search-form input[name=search]').val(filters.search);
       $('.search-form select[name=order]').val(filters.order);
+      $('.search-form select[name=order]').on('change', function() {
+        $('.search-form').submit();
+      });
     })
   </script>
 @endsection
