@@ -83,6 +83,8 @@ return [
 
     'faker_locale' => 'zh_CN',
 
+    'order_ttl' => 30,
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
