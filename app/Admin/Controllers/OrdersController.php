@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Order;
+use App\Exceptions\InvalidRequestException;
+use Illuminate\Http\Request;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -27,39 +29,6 @@ class OrdersController extends Controller
             $content->header('订单列表');
 
             $content->body($this->grid());
-        });
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param $id
-     * @return Content
-     */
-    public function edit($id)
-    {
-        return Admin::content(function (Content $content) use ($id) {
-
-            $content->header('header');
-            $content->description('description');
-
-            $content->body($this->form()->edit($id));
-        });
-    }
-
-    /**
-     * Create interface.
-     *
-     * @return Content
-     */
-    public function create()
-    {
-        return Admin::content(function (Content $content) {
-
-            $content->header('header');
-            $content->description('description');
-
-            $content->body($this->form());
         });
     }
 
@@ -91,6 +60,7 @@ class OrdersController extends Controller
                 // 禁用删除和编辑按钮
                 $actions->disableDelete();
                 $actions->disableEdit();
+                $actions->append('<a class="btn btn-xs btn-primary" href="'.route('admin.orders.show', [$actions->getKey()]).'">查看</a>');
             });
             $grid->tools(function ($tools) {
                 // 禁用批量删除按钮
@@ -101,19 +71,45 @@ class OrdersController extends Controller
         });
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
+    public function show(Order $order)
     {
-        return Admin::form(Order::class, function (Form $form) {
+        return Admin::content(function (Content $content) use ($order) {
 
-            $form->display('id', 'ID');
+            $content->header('查看订单');
+            $content->description('description');
 
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
+            $content->body(view('admin.orders.show', ['order' => $order]));
         });
+    }
+
+    public function ship(Order $order, Request $request)
+    {
+        //判断当前订单是否已经支付
+        if(!$order->paid_at){
+            throw new InvalidRequestException("该订单未支付");
+        }
+        //判断该订单是否已经发货
+        if($order->ship_status !== Order::SHIP_STATUS_PENDING){
+            throw new InvalidRequestException("订单已经发货");
+        }
+        //数据验证
+        $data = $this->validate($request, [
+            'express_company'   => 'required',
+            'express_no'        => 'required',
+        ], [], [
+            'express_company' => '物流公司',
+            'express_no'      => '物流单号'
+        ]);
+        //将物流信息写入订单
+        $order->update([
+            'ship_status' => Order::SHIP_STATUS_DELIVERED,
+            // 我们在 Order 模型的 $casts 属性里指明了 ship_data 是一个数组
+            // 因此这里可以直接把数组传过去
+            'ship_data'   => $data
+        ]);
+
+        //返回上一页
+        return redirect()->back();
+
     }
 }
