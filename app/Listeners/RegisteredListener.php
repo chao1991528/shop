@@ -5,8 +5,8 @@ namespace App\Listeners;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Notifications\EmailVerificationNotification;
-
-class RegisteredListener
+//  implements ShouldQueue 代表此监听器是异步执行的
+class RegisteredListener implements ShouldQueue
 {
     /**
      * Create the event listener.

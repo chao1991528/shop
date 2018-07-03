@@ -24,7 +24,7 @@ class ProductController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
+            $content->header('产品列表');
             $content->description('description');
 
             $content->body($this->grid());
