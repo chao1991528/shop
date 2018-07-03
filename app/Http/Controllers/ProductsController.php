@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\OrderItem;
 
 class ProductsController extends Controller
 {
@@ -60,8 +61,14 @@ class ProductsController extends Controller
             // boolval() 函数用于把值转为布尔值
             $favored = boolval($user->favoriteProducts()->find($product->id));
     	}
+        //产品评价
+        $reviews = OrderItem::where('product_id', $product->id)->orderBy('reviewed_at', 'desc')
+                                                               ->with(['order.user', 'productSku'])
+                                                               ->whereNotNull('reviewed_at')
+                                                               ->limit(10)
+                                                               ->get();
 
-    	return view('products.show', ['product' => $product, 'favored' => $favored]);
+    	return view('products.show', ['product' => $product, 'favored' => $favored, 'reviews' => $reviews]);
     }
 
     public function favor(Product $product, Request $request)
