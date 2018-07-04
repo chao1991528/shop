@@ -16,7 +16,7 @@ class HandleRefundRequest extends Request
     {
         return [
             'agree'  => ['required', 'boolean'],
-            'reason' => ['required_if:agree, false']
+            'reason' => ['required_if:agree,false']
         ];
     }
 

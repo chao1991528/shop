@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Order;
 use App\Exceptions\InvalidRequestException;
+use App\Exceptions\InternalException;
 use Illuminate\Http\Request;
 
 use Encore\Admin\Form;
@@ -122,7 +123,7 @@ class OrdersController extends Controller
         }
         //是否同意退款
         if($request->input('agree')){
-
+            $this->_refundOrder($order);
         } else {
             //将拒绝退款理由写入extra
             $extra = $order->extra ?: [];
@@ -135,5 +136,46 @@ class OrdersController extends Controller
         }
 
         return $order;
+    }
+
+    //同意退款
+    public function _refundOrder(Order $order)
+    {
+        switch ($order->payment_method) {
+            case 'wechat':
+                # code...
+                break;
+            case 'alipay':
+                $refund_no = $order->getAvailableRefundNo();
+
+                $ret = app('alipay')->refund([
+                    'out_trade_no' => $order->no,
+                    'refund_amount' => $order->total_amount,
+                    'out_request_no' => $refund_no // 退款订单号
+                ]);
+                //根据支付宝的文档，如果返回值里有 sub_code 字段说明退款失败
+                if($ret->sub_code){
+                    //将退款失败原因写入到extra
+                    $extra = $order->extra ?:[];
+                    $extra['refund_failed_code'] = $ret->sub_code;
+                    //将退款状态标记为退款失败
+                    $order->update([
+                        'refund_no' => $refund_no,
+                        'refund_status' => Order::REFUND_STATUS_FAILED,
+                        'extra' => $extra
+                    ]);
+
+                } else {
+                    $order->update([
+                        'refund_no' => $refund_no,
+                        'refund_status' => Order::REFUND_STATUS_SUCCESS
+                    ]);
+                }
+                break;
+            default:
+                // 原则上不可能出现，这个只是为了代码健壮性
+                throw new InternalException('未知订单支付方式：'.$order->payment_method);
+                break;
+        }
     }
 }
