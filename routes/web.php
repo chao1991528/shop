@@ -13,20 +13,13 @@
 
 // Route::get('/', 'PagesController@root')->name('root');
 Route::redirect('/', '/products')->name('root');
-Route::get('alipay', function(){
-    return app('alipay')->web([
-        'out_trade_no' => time(),
-        'total_amount' => '1',
-        'subject' => 'test subject - 测试'
-    ]);
-});
+Route::get('products', 'ProductsController@index')->name('products.index');
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/email_verify_notice', 'PagesController@emailVerifyNotice')->name('email_verify_notice'); 
     Route::get('/email_verification/verify', 'EmailVerificationController@verify')->name('email_verification.verify');
     Route::get('/email_verification/send', 'EmailVerificationController@send')->name('email_verification.send');
-    Route::get('products', 'ProductsController@index')->name('products.index');
     
     Route::group(['middleware' => 'email_verified'], function() {
     	Route::get('user_addresses', 'UserAddressesController@index')->name('user_addresses.index');

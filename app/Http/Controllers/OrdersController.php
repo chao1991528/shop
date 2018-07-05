@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
 use App\Services\OrderService;
 use App\Models\UserAddress;
+use App\Models\CouponCode;
 use App\Models\Order;
 use App\Exceptions\InvalidRequestException;
+use App\Exceptions\CouponCodeUnavailableException;
 use App\Http\Requests\SendReviewRequest;
 use App\Http\Requests\ApplyRefundRequest;
 use Carbon\Carbon;
@@ -20,8 +22,16 @@ class OrdersController extends Controller
     {
     	$user = $request->user();
         $address = UserAddress::find($request->input('address_id'));
+        $coupon = null;
 
-        return $orderService->add($user, $address, $request->input('remark'), $request->input('items'));   	
+        if($couponCode = $request->input('coupon_code')){
+            $coupon = CouponCode::where('code', $couponCode)->first();
+            if(!$coupon){
+                throw new CouponCodeUnavailableException("优惠券不存在", 404);
+            }
+        }
+
+        return $orderService->add($user, $address, $request->input('remark'), $request->input('items'), $coupon);   	
     }
 
     public function index(Request $request)
