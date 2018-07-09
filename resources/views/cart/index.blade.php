@@ -19,7 +19,7 @@
       </tr>
       </thead>
       <tbody class="product_list">
-      @foreach($cartItems as $item)
+      @forelse ($cartItems as $item)
         <tr data-id="{{ $item->productSku->id }}">
           <td>
             <input type="checkbox" name="select" value="{{ $item->productSku->id }}" {{ $item->productSku->product->on_sale ? 'checked' : 'disabled' }}>
@@ -48,9 +48,14 @@
             <button class="btn btn-xs btn-danger btn-remove">移除</button>
           </td>
         </tr>
-      @endforeach
+	@empty
+            <td colspan="5">
+              <p style="text-align: center;size: 16px;">购物车为空</p>
+            </td>
+      	@endforelse
       </tbody>
     </table>
+    @if (count($cartItems))
     <!-- 开始 -->
     <div>
       <form class="form-horizontal" role="form" id="order-form">
@@ -91,6 +96,7 @@
       </form>
     </div>
     <!-- 结束 -->
+   @endif
   </div>
 </div>
 </div>
