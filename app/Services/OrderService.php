@@ -53,7 +53,7 @@ class OrderService
 			//优惠券
 			if($coupon){
 				// 总金额已经计算出来了，检查是否符合优惠券规则
-				$coupon->checkAvailable($totalAmount);
+				$coupon->checkAvailable($user, $totalAmount);
 				// 把订单金额修改为优惠后的金额
 				$totalAmount = $coupon->getAdjustedPrice($totalAmount);
 				//将订单和优惠券关联

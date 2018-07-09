@@ -16,7 +16,7 @@ class CouponCodeUnavailableException extends Exception
     {
     	//如果是api请求
     	if($request->expectsJson()){
-    		return response()->json(['msg' => $this->message, 'code' => $this->code]);
+    		return response()->json(['msg' => $this->message], $this->code);
     	}
 
     	return redirect()->back()->withErrors(['coupon_code' => $this->message]);

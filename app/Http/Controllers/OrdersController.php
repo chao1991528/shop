@@ -46,7 +46,7 @@ class OrdersController extends Controller
 
     public function show(Order $order, Request $request)
     {
-        return view('orders.show', ['order' => $order->load(['items.product', 'items.productSku'])]);
+        return view('orders.show', ['order' => $order->load(['items.product', 'items.productSku', 'couponCode'])]);
     }
 
     public function received(Order $order, Request $request)

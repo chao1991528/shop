@@ -19,7 +19,7 @@
       </tr>
       </thead>
       <tbody class="product_list">
-      @foreach($cartItems as $item)
+      @forelse ($cartItems as $item)
         <tr data-id="{{ $item->productSku->id }}">
           <td>
             <input type="checkbox" name="select" value="{{ $item->productSku->id }}" {{ $item->productSku->product->on_sale ? 'checked' : 'disabled' }}>
@@ -48,9 +48,14 @@
             <button class="btn btn-xs btn-danger btn-remove">移除</button>
           </td>
         </tr>
-      @endforeach
+      @empty
+        <td colspan="5">
+          <p style="text-align: center;size: 16px;">购物车为空</p>
+        </td>
+      @endforelse
       </tbody>
     </table>
+    @if (count($cartItems))
     <!-- 开始 -->
     <div>
       <form class="form-horizontal" role="form" id="order-form">
@@ -91,6 +96,7 @@
       </form>
     </div>
     <!-- 结束 -->
+    @endif
   </div>
 </div>
 </div>
@@ -179,6 +185,8 @@
             });
             html += '</div>';
             swal({content: $(html)[0], icon: 'error'})
+          } else if(error.response.status === 403){
+            swal(error.response.data.msg, '', 'error');
           } else {
             // 其他情况应该是系统挂了
             swal('系统错误', '', 'error');
@@ -203,9 +211,10 @@
           $('#btn-cancel-coupon').show(); // 显示 取消 按钮
           $('#btn-check-coupon').hide(); // 隐藏 检查 按钮
         }, function (error) {
+          alert(error.response.status);
           // 如果返回码是 404，说明优惠券不存在
           if(error.response.status === 404) {
-            swal('优惠码不存在', '', 'error');
+            swal('优惠码不存在!', '', 'error');
           } else if (error.response.status === 403) {
           // 如果返回码是 403，说明有其他条件不满足
             swal(error.response.data.msg, '', 'error');
