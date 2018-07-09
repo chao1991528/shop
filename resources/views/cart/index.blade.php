@@ -48,11 +48,11 @@
             <button class="btn btn-xs btn-danger btn-remove">移除</button>
           </td>
         </tr>
-      @empty
-        <td colspan="5">
-          <p style="text-align: center;size: 16px;">购物车为空</p>
-        </td>
-      @endforelse
+	@empty
+            <td colspan="5">
+              <p style="text-align: center;size: 16px;">购物车为空</p>
+            </td>
+      	@endforelse
       </tbody>
     </table>
     @if (count($cartItems))
@@ -96,7 +96,7 @@
       </form>
     </div>
     <!-- 结束 -->
-    @endif
+   @endif
   </div>
 </div>
 </div>
